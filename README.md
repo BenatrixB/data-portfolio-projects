@@ -1,4 +1,4 @@
-
+# Maven Toys Stores — Sales Data Analytics
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue)
@@ -7,8 +7,6 @@
 
 ## Author
 Built by Benas Baranovskis — https://www.linkedin.com/in/bbaranovskis/
-
-# Maven Toys Stores — Sales Data Analytics
 
 > **GitHub Repository:** https://github.com/BenatrixB/data-portfolio-projects
 
@@ -23,6 +21,7 @@ product performance, store efficiency, and inventory risk.
 - **Python** — data ingestion scripts (pandas, SQLAlchemy)
 - **PostgreSQL** — local database hosting
 - **dbt** — data modelling (staging → intermediate → marts)
+- **Docker** — containerized pipeline (PostgreSQL + loader + dbt)
 - **Power BI / Excel** — visualisations
 - **PowerPoint / PDF** — final report 
 
@@ -109,32 +108,19 @@ maven_toys_analytics/
 - dbt-postgres 1.7+
 
 ## Docker Setup
+The project is fully containerized. One command runs the entire pipeline:
 
-The project includes a `docker-compose.yml` file to run PostgreSQL in a container — no local PostgreSQL installation needed.
-
-### Start the database
 ```bash
-docker-compose up -d
+docker-compose up --build
 ```
 
-### Stop the database
-```bash
-docker-compose down
-```
-
-### Connection details
-- Host: `localhost`
-- Port: `5433`
-- Database: `maven_toys`
-- User: `postgres`
-- Password: `postgres`
+This will:
+- Start PostgreSQL (port 5433)
+- Run the Python loader (loads all CSVs)
+- Run dbt models (staging → intermediate → marts)
+- Run dbt tests (13 tests)
 
 ## How to Run It
-
-### Prerequisites
-- Python 3.12
-- Docker Desktop
-- dbt-postgres 1.7+
 
 ### 1 — Clone the repository
 ```bash
@@ -168,10 +154,3 @@ This single command will:
 - Database: `maven_toys`
 - User: `postgres`
 - Password: `postgres`
-
-### 5 — Run dbt tests
-```bash
-cd maven_toys_dbt
-dbt test
-```
-All 13 tests should pass.
