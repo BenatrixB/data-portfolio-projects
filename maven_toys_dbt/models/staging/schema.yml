@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_products
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_stores
+    columns:
+      - name: store_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_sales
+    columns:
+      - name: sale_id
+        tests:
+          - unique
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
+      - name: product_id
+        tests:
+          - not_null
+  - name: stg_stores
+    columns:
+      - name: store_id
+        tests:
+          - unique
+          - not_null
+      - name: store_location
+        tests:
+          - accepted_values:
+              values: ['Residential', 'Commercial', 'Downtown', 'Airport']
