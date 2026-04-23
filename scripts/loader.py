@@ -1,8 +1,12 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
+import os
 
-engine = create_engine("postgresql://postgres:Benastrix98@localhost:5432/maven_toys")
-
+PG_CONN = os.getenv(
+    "PG_CONN",
+    "postgresql://postgres:postgres@localhost:5433/maven_toys"
+)
+engine = create_engine(PG_CONN)
 # Connection check
 #with engine.connect() as conn:
 #    result = conn.execute(text("SELECT current_database()"))

@@ -17,7 +17,8 @@ models:
       - name: store_location
         tests:
           - accepted_values:
-              values: ['Residential', 'Commercial', 'Downtown', 'Airport']
+              arguments:
+                values: ['Residential', 'Commercial', 'Downtown', 'Airport']
 
   - name: stg_sales
     columns:

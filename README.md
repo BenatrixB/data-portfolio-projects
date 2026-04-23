@@ -100,12 +100,33 @@ maven_toys_analytics/
 - All top 10 best-selling products have less than 0.5 months of stock
 - Immediate restocking recommended for top sellers before next peak season
 
-## How to Run It
-
 ### Prerequisites
 - Python 3.12
-- PostgreSQL 14+
+- Docker Desktop (recommended) OR PostgreSQL 14+ (local)
 - dbt-postgres 1.7+
+
+## Docker Setup
+
+The project includes a `docker-compose.yml` file to run PostgreSQL in a container — no local PostgreSQL installation needed.
+
+### Start the database
+```bash
+docker-compose up -d
+```
+
+### Stop the database
+```bash
+docker-compose down
+```
+
+### Connection details
+- Host: `localhost`
+- Port: `5433`
+- Database: `maven_toys`
+- User: `postgres`
+- Password: `postgres`
+
+## How to Run It
 
 ### 1 — Clone the repository
 ```bash
@@ -119,15 +140,21 @@ python -m venv venv312
 .\venv312\Scripts\Activate.ps1
 pip install pandas sqlalchemy psycopg2-binary dbt-postgres
 ```
-
 ### 3 — Set up PostgreSQL
+
+**Option A — Docker (recommended):**
+```bash
+docker-compose up -d
+```
+
+**Option B — Local PostgreSQL:**
 ```sql
 CREATE DATABASE maven_toys;
 CREATE SCHEMA raw;
 ```
 Then run the DDL script:
 ```bash
-psql -d maven_toys -f sql/01_create_schema.sql
+Get-Content sql/raw_schema_table_creation.sql | docker exec -i maven_toys_analytics-postgres-1 psql -U postgres -d maven_toys
 ```
 
 ### 4 — Load the data

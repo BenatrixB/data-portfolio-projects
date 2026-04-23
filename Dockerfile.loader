@@ -1,0 +1,14 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+COPY scripts/loader.py .
+COPY data/ ./data/
+
+ENV PG_CONN=postgresql://postgres:postgres@postgres:5432/maven_toys
+
+CMD ["python", "loader.py"]
