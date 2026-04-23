@@ -14,6 +14,10 @@ models:
         tests:
           - unique
           - not_null
+      - name: store_location
+        tests:
+          - accepted_values:
+              values: ['Residential', 'Commercial', 'Downtown', 'Airport']
 
   - name: stg_sales
     columns:
@@ -27,13 +31,3 @@ models:
       - name: product_id
         tests:
           - not_null
-  - name: stg_stores
-    columns:
-      - name: store_id
-        tests:
-          - unique
-          - not_null
-      - name: store_location
-        tests:
-          - accepted_values:
-              values: ['Residential', 'Commercial', 'Downtown', 'Airport']

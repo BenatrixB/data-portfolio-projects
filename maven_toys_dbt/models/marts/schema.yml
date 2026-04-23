@@ -8,12 +8,14 @@ models:
           - unique
           - not_null
       - name: store_id
-        tests: 
-        - relationships: 
-            to: ref('stg_stores')
-            field: store_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_stores')
+                field: store_id
       - name: product_id
-        tests: 
-        - relationships:
-            to: ref('stg_products')
-            field: product_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
