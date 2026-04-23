@@ -3,11 +3,14 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue)
 ![dbt](https://img.shields.io/badge/dbt-1.11.8-orange)
+![Docker](https://img.shields.io/badge/Docker-29.4.0-blue)
 
 ## Author
 Built by Benas Baranovskis — https://www.linkedin.com/in/bbaranovskis/
 
 # Maven Toys Stores — Sales Data Analytics
+
+> **GitHub Repository:** https://github.com/BenatrixB/data-portfolio-projects
 
 ## Description
 This project builds a full end-to-end data pipeline for Maven Toys — a 
@@ -128,49 +131,47 @@ docker-compose down
 
 ## How to Run It
 
+### Prerequisites
+- Python 3.12
+- Docker Desktop
+- dbt-postgres 1.7+
+
 ### 1 — Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/maven_toys_analytics.git
+git clone https://github.com/BenatrixB/data-portfolio-projects.git
 cd maven_toys_analytics
 ```
 
-### 2 — Set up Python environment
-```bash
-python -m venv venv312
-.\venv312\Scripts\Activate.ps1
-pip install pandas sqlalchemy psycopg2-binary dbt-postgres
-```
-### 3 — Set up PostgreSQL
+### 2 — Add the CSV data files
+Place the Maven Toys CSV files in the `data/` folder:
+- sales.csv
+- products.csv
+- stores.csv
+- inventory.csv
+- calendar.csv
 
-**Option A — Docker (recommended):**
-```bash
-docker-compose up -d
-```
+Data source: [Maven Analytics](https://www.mavenanalytics.io/)
 
-**Option B — Local PostgreSQL:**
-```sql
-CREATE DATABASE maven_toys;
-CREATE SCHEMA raw;
-```
-Then run the DDL script:
+### 3 — Run the full pipeline
 ```bash
-Get-Content sql/raw_schema_table_creation.sql | docker exec -i maven_toys_analytics-postgres-1 psql -U postgres -d maven_toys
+docker-compose up --build
 ```
 
-### 4 — Load the data
-```bash
-python scripts/loader.py
-```
+This single command will:
+- Start PostgreSQL in a container
+- Load all CSV data into the database
+- Run all dbt models (staging → intermediate → marts)
 
-### 5 — Run dbt models
+### 4 — Connect to the database
+- Host: `localhost`
+- Port: `5433`
+- Database: `maven_toys`
+- User: `postgres`
+- Password: `postgres`
+
+### 5 — Run dbt tests
 ```bash
 cd maven_toys_dbt
-dbt run
 dbt test
 ```
-
-### 6 — Verify
-```bash
-dbt test
-```
-All 13 tests should pass. Query `raw_marts.fct_sales` to explore the data.
+All 13 tests should pass.
