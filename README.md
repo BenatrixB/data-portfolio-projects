@@ -20,8 +20,8 @@ product performance, store efficiency, and inventory risk.
 - **Python** — data ingestion scripts (pandas, SQLAlchemy)
 - **PostgreSQL** — local database hosting
 - **dbt** — data modelling (staging → intermediate → marts)
-- **Power BI / Excel** — visualisations (in progress)
-- **PowerPoint / PDF** — final report (in progress)
+- **Power BI / Excel** — visualisations
+- **PowerPoint / PDF** — final report 
 
 ## Project limitation
 We do not have store operating cost data, therefore some business decision proposals might be adjusted.
@@ -42,13 +42,21 @@ The dataset contains 5 tables:
 ## Project Structure
 ```
 maven_toys_analytics/
-├── data/                        ← raw CSV files
+├── data/                        ← raw CSV files (not tracked in git)
 ├── scripts/
 │   └── loader.py                ← Python ingestion script (CSV → PostgreSQL)
 ├── sql/
-│   ├── 01_create_schema.sql     ← DDL for raw schema and tables
-│   ├── 02_verify_load.sql       ← post-load sanity checks
-│   └── metric_01-05.sql         ← business metric queries
+│   ├── raw_schema_table_creation.sql  ← DDL for raw schema and tables
+│   ├── load_validation.sql            ← post-load sanity checks
+│   ├── metric_01_revenue_by_month.sql
+│   ├── metric_02_top10_products_by_profit.sql
+│   ├── metric_03_store_performance_by_location.sql
+│   ├── metric_04_city_performance.sql
+│   └── metric_05_inventory_risk.sql
+├── deliverables/
+│   ├── maven_toys_report.pptx   ← PowerPoint report
+│   ├── maven_toys_report.pdf    ← PDF version
+│   └── maven_toys_dashboard.pbix ← Power BI dashboard
 └── maven_toys_dbt/
     ├── dbt_project.yml          ← dbt project config
     ├── models/
@@ -58,6 +66,17 @@ maven_toys_analytics/
     └── tests/
         └── schema.yml           ← dbt data quality tests
 ```
+
+## Deliverables
+
+| Deliverable | Description |
+|-------------|-------------|
+| `deliverables/maven_toys_report.pptx` | PowerPoint report with key findings and business recommendations |
+| `deliverables/maven_toys_report.pdf` | PDF version of the report |
+| `deliverables/maven_toys_dashboard.pbix` | Power BI dashboard (requires Power BI Desktop) |
+| `maven_toys_dbt/` | Full dbt project with staging, intermediate and mart models |
+| `scripts/loader.py` | Python ingestion script |
+| `sql/` | Business metric queries |
 
 ## Key Findings
 
