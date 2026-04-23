@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 .env
 logs/
+data/fct_sales.csv
+deliverables/maven_toys_excel_report.xlsx
