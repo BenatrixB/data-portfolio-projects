@@ -10,4 +10,4 @@ WORKDIR /app/maven_toys_dbt
 
 ENV DBT_PROFILES_DIR=/app/maven_toys_dbt
 
-CMD ["dbt", "run"]
+CMD ["sh", "-c", "dbt run && dbt test"]

@@ -1,12 +1,13 @@
 # Maven Toys Stores — Sales Data Analytics
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)
 ![dbt](https://img.shields.io/badge/dbt-1.11.8-orange)
 ![Docker](https://img.shields.io/badge/Docker-29.4.0-blue)
+![Airflow](https://img.shields.io/badge/Airflow-2.9.0-green)
 
 ## Author
-Built by Benas Baranovskis — https://www.linkedin.com/in/bbaranovskis/
+Built by Benas Baranovskis — [LinkedIn](https://www.linkedin.com/in/bbaranovskis/)
 
 > **GitHub Repository:** https://github.com/BenatrixB/data-portfolio-projects
 
@@ -22,10 +23,11 @@ product performance, store efficiency, and inventory risk.
 - **PostgreSQL** — local database hosting
 - **dbt** — data modelling (staging → intermediate → marts)
 - **Docker** — containerized pipeline (PostgreSQL + loader + dbt)
+- **Apache Airflow** — pipeline orchestration (daily scheduling, task monitoring)
 - **Power BI / Excel** — visualisations
-- **PowerPoint / PDF** — final report 
+- **PowerPoint / PDF** — final report
 
-## Project limitation
+## Project Limitation
 We do not have store operating cost data, therefore some business decision proposals might be adjusted.
 
 ## Data Source
@@ -59,15 +61,23 @@ maven_toys_analytics/
 │   ├── maven_toys_report.pptx   ← PowerPoint report
 │   ├── maven_toys_report.pdf    ← PDF version
 │   └── maven_toys_dashboard.pbix ← Power BI dashboard
+├── airflow/
+│   └── dags/
+│       └── maven_toys_pipeline.py  ← Airflow DAG
+├── Dockerfile.loader            ← Docker image for Python loader
+├── Dockerfile.dbt               ← Docker image for dbt
+├── docker-compose.yml           ← Orchestrates all containers
 └── maven_toys_dbt/
-    ├── dbt_project.yml          ← dbt project config
-    ├── models/
-    │   ├── staging/             ← stg_* views (one per raw table)
-    │   ├── intermediate/        ← int_sales_enriched (joined table)
-    │   └── marts/               ← fct_sales (final analytical table)
-    └── tests/
-        └── schema.yml           ← dbt data quality tests
+├── dbt_project.yml          ← dbt project config
+├── models/
+│   ├── staging/             ← stg_* views (one per raw table)
+│   ├── intermediate/        ← int_sales_enriched (joined table)
+│   └── marts/               ← fct_sales (final analytical table)
+└── tests/
+└── schema.yml           ← dbt data quality tests
 ```
+
+## Deliverables
 
 ## Deliverables
 
@@ -102,23 +112,56 @@ maven_toys_analytics/
 - All top 10 best-selling products have less than 0.5 months of stock
 - Immediate restocking recommended for top sellers before next peak season
 
-### Prerequisites
-- Python 3.12
-- Docker Desktop (recommended) OR PostgreSQL 14+ (local)
-- dbt-postgres 1.7+
-
 ## Docker Setup
-The project is fully containerized. One command runs the entire pipeline:
 
+### Prerequisites
+- Docker Desktop
+- Maven Toys CSV files placed in `data/` folder
+
+### Services
+- `postgres` — Maven Toys database (port 5433)
+- `airflow-db` — Airflow metadata database (port 5434)
+- `airflow-webserver` — Airflow UI (port 8080)
+- `airflow-scheduler` — DAG scheduler
+- `loader` — Python ingestion container
+- `dbt` — dbt transformation container
+
+### Run the full pipeline
 ```bash
 docker-compose up --build
 ```
 
-This will:
-- Start PostgreSQL (port 5433)
-- Run the Python loader (loads all CSVs)
-- Run dbt models (staging → intermediate → marts)
-- Run dbt tests (13 tests)
+This single command will:
+- Start PostgreSQL and Airflow
+- Load all CSV data into the database
+- Run all dbt models (staging → intermediate → marts)
+- Run all 13 dbt tests
+
+### Connect to the database
+- Host: `localhost`
+- Port: `5433`
+- Database: `maven_toys`
+- User: `postgres`
+- Password: `postgres`
+
+## Airflow Orchestration
+
+Once `docker-compose up --build` is running, open:
+http://localhost:8080
+
+Login credentials:
+- **Username:** `admin`
+- **Password:** `admin`
+
+### The DAG — `maven_toys_pipeline`
+The pipeline runs daily and consists of 3 tasks in sequence:
+run_loader → run_dbt_run → run_dbt_test
+
+- **run_loader** — loads all CSV data into PostgreSQL
+- **run_dbt_run** — builds all 7 dbt models (staging → intermediate → marts)
+- **run_dbt_test** — runs all 13 data quality tests
+
+To run manually click the **▶ Play** button on the `maven_toys_pipeline` DAG in the Airflow UI.
 
 ## How to Run It
 
@@ -138,19 +181,11 @@ Place the Maven Toys CSV files in the `data/` folder:
 
 Data source: [Maven Analytics](https://www.mavenanalytics.io/)
 
-### 3 — Run the full pipeline
+### 3 — Start the full stack
 ```bash
 docker-compose up --build
 ```
 
-This single command will:
-- Start PostgreSQL in a container
-- Load all CSV data into the database
-- Run all dbt models (staging → intermediate → marts)
+### 4 — Monitor the pipeline
+Open Airflow UI at `http://localhost:8080` and trigger the `maven_toys_pipeline` DAG.
 
-### 4 — Connect to the database
-- Host: `localhost`
-- Port: `5433`
-- Database: `maven_toys`
-- User: `postgres`
-- Password: `postgres`
