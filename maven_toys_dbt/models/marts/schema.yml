@@ -19,3 +19,32 @@ models:
               arguments:
                 to: ref('stg_products')
                 field: product_id
+  - name: fct_monthly_revenue
+    columns:
+      - name: sale_month
+        tests:
+          - unique
+          - not_null
+  - name: fct_store_performance
+    columns:
+      - name: store_id
+        tests:
+          - unique
+          - not_null
+  - name: fct_product_performance
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+  - name: fct_inventory_risk
+    columns: 
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+      - name: risk_flag
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['CRITICAL', 'OK', 'LOW'] 

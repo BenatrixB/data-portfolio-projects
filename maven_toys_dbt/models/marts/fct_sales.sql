@@ -22,7 +22,11 @@ profit as(
 mrg_pct as(
     SELECT
         *,
-        ROUND((profit/revenue)*100, 2) as margin_pct
+        ROUND((profit/revenue)*100, 2) as margin_pct,
+        DATE_TRUNC('month', sale_date) as sale_month,
+        EXTRACT(year FROM sale_date) as sale_year,
+        EXTRACT(month FROM sale_date) as sale_month_num,
+        ROUND(revenue / units, 2) as revenue_per_unit
     FROM
         profit
 )
