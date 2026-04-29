@@ -72,7 +72,12 @@ maven_toys_analytics/
 ├── models/
 │   ├── staging/             ← stg_* views (one per raw table)
 │   ├── intermediate/        ← int_sales_enriched (joined table)
-│   └── marts/               ← fct_sales (final analytical table)
+│   └── marts/ 
+|       ├── fct_sales.sql
+│       ├── fct_monthly_revenue.sql
+│       ├── fct_store_performance.sql
+│       ├── fct_product_performance.sql
+│       └── fct_inventory_risk.sql              
 └── tests/
 └── schema.yml           ← dbt data quality tests
 ```
@@ -111,6 +116,17 @@ maven_toys_analytics/
 - **Action Figure and Colorbuds** are critically low — only 0.2 months of stock remaining
 - All top 10 best-selling products have less than 0.5 months of stock
 - Immediate restocking recommended for top sellers before next peak season
+
+### Growth Analysis
+- **March 2023** had the highest YoY revenue growth at **+49.88%**
+- **July 2023** followed closely at **+48.97%** YoY growth
+- All 2023 months show positive YoY growth vs 2022
+
+### Inventory Value at Risk
+- **20 out of 35 products** classified as CRITICAL (< 0.5 months stock)
+- **$210,375** of inventory value is at critical risk
+- Only 15 products have healthy stock levels
+- Immediate restocking required before December peak season
 
 ## Docker Setup
 
@@ -159,7 +175,7 @@ run_loader → run_dbt_run → run_dbt_test
 
 - **run_loader** — loads all CSV data into PostgreSQL
 - **run_dbt_run** — builds all 7 dbt models (staging → intermediate → marts)
-- **run_dbt_test** — runs all 13 data quality tests
+- **run_dbt_test** — runs all 22 data quality tests
 
 To run manually click the **▶ Play** button on the `maven_toys_pipeline` DAG in the Airflow UI.
 
