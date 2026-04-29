@@ -118,15 +118,20 @@ maven_toys_analytics/
 - Immediate restocking recommended for top sellers before next peak season
 
 ### Growth Analysis
-- **March 2023** had the highest YoY revenue growth at **+49.88%**
-- **July 2023** followed closely at **+48.97%** YoY growth
-- All 2023 months show positive YoY growth vs 2022
+- **March 2023** highest YoY revenue growth at **+49.88%**
+- **July 2023** second highest at **+48.97%** YoY
+- All 2023 months show positive YoY growth
+
+### Product Portfolio Analysis
+- **Stars** (high revenue + high margin): Colorbuds, Action Figure
+- **Cash Cows** (high revenue + low margin): Lego Bricks — pricing opportunity
+- **Hidden Gems** (low revenue + high margin): Electronics category
+- Revenue does not always equal profit — margin management critical
 
 ### Inventory Value at Risk
-- **20 out of 35 products** classified as CRITICAL (< 0.5 months stock)
-- **$210,375** of inventory value is at critical risk
-- Only 15 products have healthy stock levels
-- Immediate restocking required before December peak season
+- **20 out of 35 products** classified as CRITICAL
+- **$210,375** of inventory value at critical risk
+- Immediate restocking required before December peak
 
 ## Docker Setup
 
@@ -150,8 +155,8 @@ docker-compose up --build
 This single command will:
 - Start PostgreSQL and Airflow
 - Load all CSV data into the database
-- Run all dbt models (staging → intermediate → marts)
-- Run all 13 dbt tests
+- 11 models total (staging + intermediate + 5 mart models)
+- 22 data quality tests passing
 
 ### Connect to the database
 - Host: `localhost`
