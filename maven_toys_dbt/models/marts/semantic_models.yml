@@ -1,0 +1,66 @@
+semantic_models:
+  - name: fct_sales_semantic
+    description: "Semantic model for Maven Toys sales data"
+    model: ref('fct_sales')
+    
+    entities:
+      - name: sale
+        type: primary
+        expr: sale_id
+
+    dimensions:
+      - name: sale_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: product_category
+        type: categorical
+      - name: store_location
+        type: categorical
+
+    measures:
+      - name: total_revenue
+        agg: sum
+        expr: revenue
+        agg_time_dimension: sale_date
+
+      - name: total_profit
+        agg: sum
+        expr: profit
+        agg_time_dimension: sale_date
+
+      - name: total_units
+        agg: sum
+        expr: units
+        agg_time_dimension: sale_date
+metrics:
+  - name: revenue
+    label: Total Revenue
+    description: "Total revenue across all sales"
+    type: simple
+    type_params:
+      measure: total_revenue
+
+  - name: profit
+    label: Total Profit
+    description: "Total profit across all sales"
+    type: simple
+    type_params:
+      measure: total_profit
+
+  - name: units_sold
+    label: Units Sold
+    description: "Total units sold across all sales"
+    type: simple
+    type_params:
+      measure: total_units
+
+  - name: profit_margin
+    label: Profit Margin %
+    description: "Profit as a percentage of revenue"
+    type: derived
+    type_params:
+      expr: "profit / revenue * 100"
+      metrics:
+        - name: profit
+        - name: revenue
