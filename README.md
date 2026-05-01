@@ -22,6 +22,7 @@ product performance, store efficiency, and inventory risk.
 - **Python** — data ingestion scripts (pandas, SQLAlchemy)
 - **PostgreSQL** — local database hosting
 - **dbt** — data modelling (staging → intermediate → marts)
+- **dbt Semantic Layer / MetricFlow** — centralized metric definitions
 - **Docker** — containerized pipeline (PostgreSQL + loader + dbt)
 - **Apache Airflow** — pipeline orchestration (daily scheduling, task monitoring)
 - **Power BI / Excel** — visualisations
@@ -94,6 +95,7 @@ maven_toys_analytics/
 | `maven_toys_dbt/` | Full dbt project with staging, intermediate and mart models |
 | `scripts/loader.py` | Python ingestion script |
 | `sql/` | Business metric queries |
+| `deliverables/Case_Study_Pricing_Analysis.pdf` | A short business case study on what could be done |
 
 ## Key Findings
 
@@ -132,6 +134,59 @@ maven_toys_analytics/
 - **20 out of 35 products** classified as CRITICAL
 - **$210,375** of inventory value at critical risk
 - Immediate restocking required before December peak
+
+## Semantic Layer
+
+The project includes a dbt Semantic Layer built with MetricFlow. It defines business metrics in one central place so they can be queried consistently without writing SQL.
+
+### Available Metrics
+
+| Metric | Description |
+|--------|-------------|
+| `revenue` | Total revenue (units × product price) |
+| `profit` | Total profit (revenue - cost) |
+| `units_sold` | Total units sold |
+| `profit_margin` | Profit as % of revenue |
+
+### Available Dimensions
+
+| Dimension | Description |
+|-----------|-------------|
+| `metric_time__month` | Time grouped by month |
+| `sale__product_category` | Product category |
+| `sale__store_location` | Store location type |
+| `sale__sale_date__day` | Individual sale date |
+
+### Querying Metrics with MetricFlow
+
+Install MetricFlow:
+```bash
+pip install dbt-metricflow
+```
+
+Example queries:
+
+```bash
+# Revenue by month
+mf query --metrics revenue --group-by metric_time__month
+
+# Profit by product category
+mf query --metrics profit --group-by sale__product_category
+
+# Revenue and profit by store location
+mf query --metrics revenue,profit --group-by sale__store_location
+
+# Units sold by month
+mf query --metrics units_sold --group-by metric_time__month
+```
+
+### Why a Semantic Layer?
+
+Without a semantic layer every analyst defines metrics differently in every tool — PowerBI, Excel, SQL — leading to inconsistent numbers. The semantic layer ensures:
+
+- **One definition** of revenue used everywhere
+- **No SQL required** to query core metrics
+- **Consistent results** across all tools and teams
 
 ## Docker Setup
 
